@@ -29,14 +29,14 @@
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23fbcfe8' fill-opacity='0.15'%3E%3Cpath d='M40 0l-4 12-12-4 4 12-12 4 12 4-4 12 12-4 4 12 4-12 12 4-4-12 12-4-12-4 4-12-12 4z'/%3E%3C/g%3E%3C/svg%3E");
         }
 
-        /* --- NEW: Floral Curtain Raiser Styles --- */
+        /* --- Curtain Raiser Styles --- */
         .curtain-container {
             position: fixed;
             inset: 0;
             z-index: 100;
             display: flex;
             overflow: hidden;
-            pointer-events: none;
+            cursor: pointer;
         }
         .curtain-panel {
             flex: 1;
@@ -44,10 +44,10 @@
             background: linear-gradient(135deg, #be123c 0%, #9f1239 100%);
             position: relative;
             transition: transform 1.8s cubic-bezier(0.77, 0, 0.175, 1);
-            pointer-events: auto;
-            box-shadow: 0 0 50px rgba(0,0,0,0.4);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            will-change: transform;
         }
-        /* Elaborate gold lace border inside the curtains */
+        /* Gold lace border inside curtains */
         .curtain-panel::after {
             content: '';
             position: absolute;
@@ -59,7 +59,7 @@
         .curtain-left::after { right: 0; }
         .curtain-right::after { left: 0; }
 
-        /* Curtain opening animation states */
+        /* Curtain movement classes */
         .curtain-container.opened .curtain-left {
             transform: translateX(-100%);
         }
@@ -70,11 +70,11 @@
             position: absolute;
             inset: 0;
             display: flex;
-            flex-col: direction;
             align-items: center;
             justify-content: center;
             z-index: 102;
-            transition: opacity 0.8s ease-out;
+            transition: opacity 0.6s ease-out;
+            pointer-events: none; /* Allows click to pass straight through to main container */
         }
 
         /* Envelope Animation Styles */
@@ -149,31 +149,30 @@
 <body class="floral-bg">
 
     <!-- ========================================== -->
-    <!-- NEW: FLORAL CURTAIN RAISER MODULE -->
+    <!-- CURTAIN RAISER (Click anywhere on screen to open) -->
     <!-- ========================================== -->
-    <div id="curtain-stage" class="curtain-container">
+    <div id="curtain-stage" class="curtain-container" onclick="revealCurtains()">
         <!-- Left Panel -->
         <div class="curtain-panel curtain-left flex items-center justify-end">
-            <!-- Royal Gold Mandala Emblem Split -->
             <div class="w-24 h-48 border-y-4 border-l-4 border-amber-400 bg-amber-500/10 rounded-l-full translate-x-2 flex items-center justify-center text-amber-400 text-3xl">
-                <i class="fa-solid fa-g tenderness p-4"></i>
+                <i class="fa-solid fa-gantt-chart opacity-20"></i>
             </div>
         </div>
         
-        <!-- Central Trigger Content -->
-        <div id="curtain-text" class="curtain-content-wrapper flex flex-col items-center justify-center">
-            <div class="bg-white/10 backdrop-blur-md p-8 rounded-full border border-white/20 text-center shadow-2xl animate-pulse">
-                <h3 class="serif-font text-white text-4xl md:text-5xl mb-2">The Royal Union</h3>
-                <p class="text-amber-300 tracking-widest uppercase text-xs">Tap to Reveal</p>
+        <!-- Center Floating Text Badge -->
+        <div id="curtain-text" class="curtain-content-wrapper">
+            <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 text-center shadow-2xl">
+                <h3 class="serif-font text-white text-5xl md:text-6xl mb-3">The Royal Union</h3>
+                <p class="text-amber-300 tracking-widest uppercase text-sm animate-pulse font-semibold">
+                    <i class="fa-solid fa-hand-pointer mr-2"></i>Tap Screen to Enter
+                </p>
             </div>
-            <button onclick="revealCurtains()" class="absolute inset-0 w-full h-full cursor-pointer z-10 opacity-0" aria-label="Open Curtains"></button>
         </div>
 
         <!-- Right Panel -->
         <div class="curtain-panel curtain-right flex items-center justify-start">
-            <!-- Royal Gold Mandala Emblem Right Split -->
             <div class="w-24 h-48 border-y-4 border-r-4 border-amber-400 bg-amber-500/10 rounded-r-full -translate-x-2 flex items-center justify-center text-amber-400 text-3xl">
-                <i class="fa-solid fa-om tenderness p-4"></i>
+                <i class="fa-solid fa-om opacity-20"></i>
             </div>
         </div>
     </div>
@@ -229,7 +228,7 @@
             <div class="relative w-80 h-80 rounded-2xl overflow-hidden shadow-xl border border-rose-100 bg-white">
                 <!-- Underneath Secret Date Info -->
                 <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-gradient-to-br from-rose-50 to-white">
-                    <i class="fa-solid fa-calendar-heart text-rose-500 text-5xl mb-3 animate-pulse"></i>
+                    <i class="fa-solid fa-calendar-heart text-rose-500 text-5xl mb-3"></i>
                     <h3 class="font-bold text-2xl text-gray-800 tracking-wide">DECEMBER 25, 2026</h3>
                     <p class="text-rose-500 serif-font text-3xl mt-2">Gokuldham Grand Hall</p>
                     <p class="text-xs text-gray-400 mt-2 uppercase tracking-widest">Mumbai, MH</p>
@@ -259,7 +258,7 @@
                 <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-rose-400 text-center">
                     <h3 class="serif-font text-3xl text-rose-500 mb-4">Bride's Family</h3>
                     <ul class="space-y-2 text-gray-700">
-                        <li class="font-semibold text-lg">Mr. Krishnan Iyer <span class="text-xs text-gray-400">(Best Friend & Well-Wisher)</span></li>
+                        <li class="font-semibold text-lg">Mr. Krishnan Iyer <span class="text-xs text-gray-400">(Well-Wisher)</span></li>
                         <li>The Mahila Mandal <span class="text-xs text-gray-400">(Sisters & Constant Support)</span></li>
                     </ul>
                 </div>
@@ -309,26 +308,29 @@
     </div>
 
     <script>
-        // --- 1. NEW: CURTAIN RAISER FUNCTION ---
+        // --- 1. FIXED CURTAIN RAISER FUNCTION ---
         function revealCurtains() {
             const stage = document.getElementById('curtain-stage');
             const text = document.getElementById('curtain-text');
             
-            // Fade text out quickly
+            // Turn off clicks instantly to prevent multiple triggers
+            stage.removeAttribute('onclick');
+            
+            // Fade text decoration badge out
             text.style.opacity = '0';
             
-            // Part curtains sideways
+            // Move side curtains apart
             stage.classList.add('opened');
             
-            // Drop a mini floral intro flash right as curtains open
+            // Flash celebration confetti
             confetti({
-                particleCount: 40,
-                spread: 80,
-                origin: { y: 0.3 },
+                particleCount: 50,
+                spread: 70,
+                origin: { y: 0.4 },
                 colors: ['#fb7185', '#fda4af', '#fef08a']
             });
 
-            // Wipe out stage from layout context completely after movement completes
+            // Destroy layout node completely when transit ends
             setTimeout(() => {
                 stage.remove();
             }, 1800);
