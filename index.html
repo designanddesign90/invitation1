@@ -4,599 +4,464 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wedding of Jethalal & Babita</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Great+Vibes&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
-    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti for Floral Rain -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
-        :root {
-            --burgundy: #800020;
-            --gold: #D4AF37;
-            --blush: #FFF0F5;
-            --text-dark: #333;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body, html {
-            width: 100%;
-            height: 100%;
-            font-family: 'Montserrat', sans-serif;
+        body {
+            font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
-            background-color: var(--blush);
-            color: var(--text-dark);
-            scroll-behavior: smooth;
+            background-color: #fffafb;
+        }
+        .serif-font {
+            font-family: 'Great Vibes', cursive;
+        }
+        
+        /* Floral Background Pattern */
+        .floral-bg {
+            background-color: #fffafb;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23fbcfe8' fill-opacity='0.15'%3E%3Cpath d='M40 0l-4 12-12-4 4 12-12 4 12 4-4 12 12-4 4 12 4-12 12 4-4-12 12-4-12-4 4-12-12 4z'/%3E%3C/g%3E%3C/svg%3E");
         }
 
-        /* --- ENVELOPE INTRO SCREEN --- */
-        #intro-overlay {
+        /* --- NEW: Floral Curtain Raiser Styles --- */
+        .curtain-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, #2c000e 0%, #0a0003 100%);
+            inset: 0;
+            z-index: 100;
             display: flex;
-            justify-content: center;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .curtain-panel {
+            flex: 1;
+            height: 100%;
+            background: linear-gradient(135deg, #be123c 0%, #9f1239 100%);
+            position: relative;
+            transition: transform 1.8s cubic-bezier(0.77, 0, 0.175, 1);
+            pointer-events: auto;
+            box-shadow: 0 0 50px rgba(0,0,0,0.4);
+        }
+        /* Elaborate gold lace border inside the curtains */
+        .curtain-panel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 15px;
+            background: repeating-linear-gradient(45deg, #fbbf24, #fbbf24 10px, #f59e0b 10px, #f59e0b 20px);
+        }
+        .curtain-left::after { right: 0; }
+        .curtain-right::after { left: 0; }
+
+        /* Curtain opening animation states */
+        .curtain-container.opened .curtain-left {
+            transform: translateX(-100%);
+        }
+        .curtain-container.opened .curtain-right {
+            transform: translateX(100%);
+        }
+        .curtain-content-wrapper {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-col: direction;
             align-items: center;
-            z-index: 1000;
-            transition: opacity 1.5s ease-in-out, visibility 1.5s;
+            justify-content: center;
+            z-index: 102;
+            transition: opacity 0.8s ease-out;
         }
 
+        /* Envelope Animation Styles */
         .envelope-wrapper {
+            perspective: 1000px;
+            transition: all 1.5s ease-in-out;
+        }
+        .envelope {
             position: relative;
             width: 300px;
             height: 200px;
-            background-color: var(--burgundy);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            background: #f43f5e;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border-radius: 0 0 8px 8px;
             cursor: pointer;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
         }
-
-        /* Envelope Flap */
-        .envelope-wrapper::before {
-            content: '';
+        .envelope::before {
+            content: "";
             position: absolute;
             top: 0;
-            left: 0;
-            width: 0;
-            height: 0;
+            z-index: 2;
             border-left: 150px solid transparent;
             border-right: 150px solid transparent;
-            border-top: 110px solid #990026;
+            border-top: 100px solid #fda4af;
             transform-origin: top;
-            transition: transform 1s ease 0.5s;
-            z-index: 3;
+            transition: transform 1s ease-in-out 0.5s;
+            border-radius: 4px;
         }
-
-        /* Envelope Front Pockets */
-        .envelope-wrapper::after {
-            content: '';
+        .envelope.open::before {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+        .letter {
             position: absolute;
             bottom: 0;
-            left: 0;
-            width: 0;
-            height: 0;
-            border-left: 150px solid #66001a;
-            border-right: 150px solid #66001a;
-            border-bottom: 100px solid #550015;
-            z-index: 4;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-        }
-
-        /* Wax Seal / Coin */
-        .wax-seal {
-            position: absolute;
-            top: 90px;
-            left: 130px;
-            width: 40px;
-            height: 40px;
-            background: radial-gradient(circle, #ffe066 0%, var(--gold) 100%);
-            border-radius: 50%;
-            z-index: 5;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 10px;
-            color: #550015;
-            font-weight: bold;
-            border: 2px dashed #b89218;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-        }
-
-        /* Letter inside */
-        .letter-preview {
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            width: 270px;
+            left: 10px;
+            right: 10px;
             height: 180px;
-            background: #fff;
-            z-index: 2;
+            background: white;
+            border-radius: 4px;
+            transition: transform 1.5s ease-in-out 1.2s;
+            z-index: 1;
             padding: 20px;
             text-align: center;
-            transition: transform 1.5s ease 1s;
-            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+        .envelope.open .letter {
+            transform: translateY(-120px);
         }
 
-        .letter-preview h3 {
-            font-family: 'Great Vibes', cursive;
-            color: var(--burgundy);
-            font-size: 24px;
-        }
-
-        /* Open State Animations */
-        .envelope-wrapper.open::before {
-            transform: rotateX(180deg);
-            z-index: 1;
-        }
-
-        .envelope-wrapper.open .wax-seal {
-            transform: scale(0);
-            opacity: 0;
-        }
-
-        .envelope-wrapper.open .letter-preview {
-            transform: translateY(-120px) scale(1.05);
-        }
-
-        #intro-overlay.fade-out {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-
-        /* --- MAIN WEBSITE CONTENT --- */
-        #main-content {
-            display: none; /* Revealed via JS */
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
-        }
-
-        #main-content.visible {
-            display: block;
-            opacity: 1;
-        }
-
-        /* Floral Canvas */
-        #floral-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 99;
-        }
-
-        /* Section Global Styles */
-        section {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px 20px;
-            position: relative;
-            background: rgba(255, 240, 245, 0.85);
-            border-bottom: 2px solid rgba(212, 175, 55, 0.3);
-        }
-
-        /* Scroll Animation Triggers */
-        .reveal {
+        /* Scroll Animation Utility */
+        .fade-in-section {
             opacity: 0;
             transform: translateY(50px);
-            transition: all 1.5s ease;
+            visibility: hidden;
+            transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+            will-change: opacity, transform;
         }
-
-        .reveal.active {
+        .fade-in-section.is-visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: none;
+            visibility: visible;
         }
 
-        /* --- LANDING PAGE --- */
-        .landing-hero {
-            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), 
-                        url('https://images.unsplash.com/photo-1523438885200-e635ba2c371e?auto=format&fit=crop&q=80&w=1920') no-repeat center center/cover;
-            text-align: center;
-        }
-
-        .title-container h1 {
-            font-family: 'Great Vibes', cursive;
-            font-size: 4.5rem;
-            color: var(--burgundy);
-            margin-bottom: 10px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .title-container h2 {
-            font-family: 'Cinzel Decorative', serif;
-            font-size: 1.8rem;
-            color: var(--gold);
-            letter-spacing: 4px;
-            margin-top: 15px;
-        }
-
-        .scroll-down {
-            margin-top: 50px;
-            font-size: 14px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            animation: bounce 2s infinite;
-            color: var(--burgundy);
-        }
-
-        /* --- SCRATCH CARD SECTION --- */
-        .scratch-section {
-            background: linear-gradient(rgba(255, 240, 245, 0.9), rgba(255, 240, 245, 0.9));
-        }
-
-        .scratch-section h2 {
-            font-family: 'Cinzel Decorative', serif;
-            color: var(--burgundy);
-            margin-bottom: 30px;
-        }
-
-        .scratch-container {
-            position: relative;
-            width: 320px;
-            height: 320px;
-            user-select: none;
-        }
-
-        /* Secret Revealed Date Box */
-        .date-secret {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #fff;
-            border: 3px double var(--gold);
-            border-radius: 50%; /* Makes it a heart clip container later or circle */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            box-shadow: inset 0 0 20px rgba(212,175,55,0.2);
-        }
-
-        /* Heart clip-path for structural neatness */
-        .heart-shape {
-            clip-path: path('M12 4.419C12.448 3.974 13.064 3.5 14 3.5 16.486 3.5 18.5 5.514 18.5 8c0 4.418-5.064 7.649-6.5 8.5C10.564 15.649 5.5 12.418 5.5 8c0-2.486 2.014-4.5 4.5-4.5.936 0 1.552.474 2 1.419M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z');
-        }
-
-        .date-secret h3 {
-            font-family: 'Great Vibes', cursive;
-            font-size: 2.5rem;
-            color: var(--burgundy);
-        }
-
-        .date-secret p {
-            font-size: 1.1rem;
-            letter-spacing: 1px;
-            margin-top: 10px;
-            font-weight: 500;
-        }
-
-        /* Canvas Overlay for Scratching */
         #scratch-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            cursor: crosshair;
-            z-index: 10;
-        }
-
-        .scratch-instruction {
-            margin-top: 15px;
-            font-size: 0.9rem;
-            color: #666;
-            font-style: italic;
-        }
-
-        /* --- FAMILY SECTION --- */
-        .family-section h2 {
-            font-family: 'Cinzel Decorative', serif;
-            color: var(--burgundy);
-            margin-bottom: 50px;
-        }
-
-        .family-grid {
-            display: flex;
-            gap: 40px;
-            max-width: 1000px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .family-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            text-align: center;
-            width: 280px;
-            border-top: 4px solid var(--gold);
-        }
-
-        .family-card h3 {
-            font-family: 'Great Vibes', cursive;
-            font-size: 2rem;
-            color: var(--burgundy);
-            margin-bottom: 10px;
-        }
-
-        .family-card p {
-            font-size: 0.9rem;
-            color: #555;
-            line-height: 1.6;
-        }
-
-        /* --- VENUE SECTION --- */
-        .venue-section h2 {
-            font-family: 'Cinzel Decorative', serif;
-            color: var(--burgundy);
-            margin-bottom: 20px;
-        }
-
-        .venue-details {
-            text-align: center;
-            max-width: 600px;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .map-container {
-            width: 90%;
-            max-width: 700px;
-            height: 350px;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-            border: 3px solid white;
-        }
-
-        .map-container iframe {
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-
-        /* Animations */
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
-        }
-
-        @media(max-width: 768px) {
-            .title-container h1 { font-size: 3rem; }
-            .title-container h2 { font-size: 1.2rem; }
-            .map-container { height: 250px; }
+            cursor: pointer;
+            touch-action: none;
         }
     </style>
 </head>
-<body>
+<body class="floral-bg">
 
-    <div id="intro-overlay">
-        <div class="envelope-wrapper" id="envelope">
-            <div class="wax-seal">TAP</div>
-            <div class="letter-preview">
-                <h3>Wedding Invitation</h3>
-                <p style="font-size: 11px; margin-top: 10px; color: #666;">Jethalal & Babita</p>
-                <p style="font-size: 10px; margin-top: 15px; color: var(--gold);">Click to Open</p>
+    <!-- ========================================== -->
+    <!-- NEW: FLORAL CURTAIN RAISER MODULE -->
+    <!-- ========================================== -->
+    <div id="curtain-stage" class="curtain-container">
+        <!-- Left Panel -->
+        <div class="curtain-panel curtain-left flex items-center justify-end">
+            <!-- Royal Gold Mandala Emblem Split -->
+            <div class="w-24 h-48 border-y-4 border-l-4 border-amber-400 bg-amber-500/10 rounded-l-full translate-x-2 flex items-center justify-center text-amber-400 text-3xl">
+                <i class="fa-solid fa-g tenderness p-4"></i>
+            </div>
+        </div>
+        
+        <!-- Central Trigger Content -->
+        <div id="curtain-text" class="curtain-content-wrapper flex flex-col items-center justify-center">
+            <div class="bg-white/10 backdrop-blur-md p-8 rounded-full border border-white/20 text-center shadow-2xl animate-pulse">
+                <h3 class="serif-font text-white text-4xl md:text-5xl mb-2">The Royal Union</h3>
+                <p class="text-amber-300 tracking-widest uppercase text-xs">Tap to Reveal</p>
+            </div>
+            <button onclick="revealCurtains()" class="absolute inset-0 w-full h-full cursor-pointer z-10 opacity-0" aria-label="Open Curtains"></button>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="curtain-panel curtain-right flex items-center justify-start">
+            <!-- Royal Gold Mandala Emblem Right Split -->
+            <div class="w-24 h-48 border-y-4 border-r-4 border-amber-400 bg-amber-500/10 rounded-r-full -translate-x-2 flex items-center justify-center text-amber-400 text-3xl">
+                <i class="fa-solid fa-om tenderness p-4"></i>
             </div>
         </div>
     </div>
 
-    <div id="main-content">
+
+    <!-- 1. ENVELOPE INTRO SCREEN -->
+    <div id="intro-screen" class="fixed inset-0 z-40 flex flex-col items-center justify-center bg-rose-50 transition-all duration-1000">
+        <h2 class="serif-font text-4xl md:text-5xl text-rose-600 mb-12 animate-bounce">You're Invited... Tap to Open</h2>
         
-        <canvas id="floral-canvas"></canvas>
+        <div class="envelope-wrapper">
+            <div class="envelope" id="main-envelope" onclick="openEnvelope()">
+                <!-- Wax Seal / Coin -->
+                <div id="wax-seal" class="absolute top-[40%] left-[43%] z-30 w-12 h-12 bg-amber-400 rounded-full flex items-center justify-center shadow-lg border-2 border-amber-500 animate-pulse transition-all duration-500">
+                    <i class="fa-solid fa-heart text-white text-xl"></i>
+                </div>
+                <!-- Letter inside -->
+                <div class="letter shadow-md flex flex-col justify-center items-center">
+                    <p class="serif-font text-2xl text-rose-600 font-bold">Jethalal</p>
+                    <p class="text-xs text-gray-400 my-1">&</p>
+                    <p class="serif-font text-2xl text-rose-600 font-bold">Babita</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <section class="landing-hero">
-            <div class="title-container reveal">
-                <h2>The Wedding Celebration of</h2>
-                <h1>Jethalal & Babita</h1>
-                <p style="letter-spacing: 3px; text-transform: uppercase; font-size: 12px; margin-top: 10px;">Are Cordially Invited</p>
-                <div class="scroll-down">↓ Scroll Down ↓</div>
+    <!-- MAIN WEBSITE CONTENT -->
+    <div id="main-content" class="hidden opacity-0 transition-opacity duration-1000">
+        
+        <!-- 2. HERO LANDING PAGE -->
+        <header class="min-h-screen flex flex-col items-center justify-center relative px-4 text-center">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-rose-50/50 pointer-events-none"></div>
+            <div class="z-10 max-w-2xl bg-white/80 backdrop-blur-md p-8 md:p-12 rounded-3xl shadow-xl border border-rose-100">
+                <span class="text-xs uppercase tracking-widest text-gray-500 font-semibold">The Wedding of</span>
+                <h1 class="serif-font text-6xl md:text-8xl text-rose-600 my-4">Jethalal & Babita</h1>
+                <p class="text-gray-600 max-w-md mx-auto mt-4 text-sm md:text-base leading-relaxed">
+                    Together with their families, they invite you to share in their joy as they tie the knot!
+                </p>
+                <div class="mt-8 animate-bounce text-rose-400">
+                    <p class="text-xs mb-2">Scroll Down</p>
+                    <i class="fa-solid fa-chevron-down text-xl"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- 3. SCRATCH CARD DATE SECTION -->
+        <section class="min-h-screen flex flex-col items-center justify-center px-4 py-20 fade-in-section">
+            <div class="text-center mb-8">
+                <h2 class="serif-font text-5xl text-rose-600 mb-2">Save The Date</h2>
+                <p class="text-gray-500 text-sm">Scratch the card to reveal the big wedding details!</p>
+            </div>
+
+            <!-- Scratch Card Container -->
+            <div class="relative w-80 h-80 rounded-2xl overflow-hidden shadow-xl border border-rose-100 bg-white">
+                <!-- Underneath Secret Date Info -->
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-gradient-to-br from-rose-50 to-white">
+                    <i class="fa-solid fa-calendar-heart text-rose-500 text-5xl mb-3 animate-pulse"></i>
+                    <h3 class="font-bold text-2xl text-gray-800 tracking-wide">DECEMBER 25, 2026</h3>
+                    <p class="text-rose-500 serif-font text-3xl mt-2">Gokuldham Grand Hall</p>
+                    <p class="text-xs text-gray-400 mt-2 uppercase tracking-widest">Mumbai, MH</p>
+                </div>
+                
+                <!-- Full-cover Scratch Canvas Layer -->
+                <canvas id="scratch-canvas" width="320" height="320" class="absolute inset-0 z-10"></canvas>
             </div>
         </section>
 
-        <section class="scratch-section">
-            <div class="reveal" style="text-align: center; display: flex; flex-direction: column; align-items: center;">
-                <h2>Save Our Date</h2>
-                <div class="scratch-container">
-                    <div class="date-secret">
-                        <span style="font-size: 2rem; color: var(--gold);">♥</span>
-                        <h3>July 18, 2026</h3>
-                        <p>At 6:00 PM onwards</p>
-                        <p style="font-size: 12px; color: #777;">Gokuldham Society Hall</p>
+        <!-- 4. FAMILY SECTION -->
+        <section class="min-h-screen flex flex-col items-center justify-center px-4 py-20 bg-rose-50/50 fade-in-section">
+            <h2 class="serif-font text-5xl text-rose-600 text-center mb-4">Meet the Families</h2>
+            <p class="text-gray-500 text-center max-w-md mb-12 text-sm">With blessings from the pillars of our lives.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
+                <!-- Groom's Side -->
+                <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-rose-400 text-center">
+                    <h3 class="serif-font text-3xl text-rose-500 mb-4">Groom's Family</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="font-semibold text-lg">Champaklal Gada <span class="text-xs text-gray-400">(Father)</span></li>
+                        <li>Daya Jethalal Gada <span class="text-xs text-gray-400">(Pillar of Strength)</span></li>
+                        <li>Tipendra Jethalal Gada (Tapu) <span class="text-xs text-gray-400">(Son)</span></li>
+                    </ul>
+                </div>
+                <!-- Bride's Side -->
+                <div class="bg-white p-8 rounded-2xl shadow-md border-t-4 border-rose-400 text-center">
+                    <h3 class="serif-font text-3xl text-rose-500 mb-4">Bride's Family</h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="font-semibold text-lg">Mr. Krishnan Iyer <span class="text-xs text-gray-400">(Best Friend & Well-Wisher)</span></li>
+                        <li>The Mahila Mandal <span class="text-xs text-gray-400">(Sisters & Constant Support)</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. VENUE & MAP SECTION -->
+        <section class="min-h-screen flex flex-col items-center justify-center px-4 py-20 fade-in-section">
+            <h2 class="serif-font text-5xl text-rose-600 text-center mb-4">The Venue</h2>
+            <p class="text-gray-500 text-center max-w-md mb-12 text-sm">Join us for the celebrations here!</p>
+
+            <div class="bg-white p-4 rounded-3xl shadow-xl max-w-3xl w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Venue Text details -->
+                <div class="flex flex-col justify-center p-4">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="p-3 bg-rose-100 text-rose-500 rounded-xl">
+                            <i class="fa-solid fa-location-dot text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Grand Ballroom</h4>
+                            <p class="text-sm text-gray-500">Gokuldham Society, Mumbai</p>
+                        </div>
                     </div>
-                    <canvas id="scratch-canvas" width="320" height="320"></canvas>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        The wedding extravaganza and reception will happen at the central compound, completely decorated with beautiful marigold and premium floral drops. Valet parking is available.
+                    </p>
                 </div>
-                <p class="scratch-instruction">Scratch the heart to reveal the wedding date!</p>
+                <!-- Interactive Embed Map -->
+                <div class="w-full h-64 md:h-auto rounded-2xl overflow-hidden shadow-inner border border-gray-100">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3769.7712395563914!2d72.85194167597507!3d19.11767665074211!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c83405555555%3A0x2a91df79762df7bc!2sGoregaon%20East%2C%20Mumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1710000000000!5m2!1sen!2sin" 
+                        class="w-full h-full border-0" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
             </div>
+
+            <!-- Footer Message -->
+            <footer class="mt-20 text-center text-xs text-gray-400">
+                <p class="serif-font text-2xl text-rose-400 mb-1">See you there!</p>
+                <p>&copy; 2026 Jethalal & Babita's Wedding Ceremony.</p>
+            </footer>
         </section>
 
-        <section class="family-section">
-            <h2 class="reveal">With Family & Blessings</h2>
-            <div class="family-grid">
-                <div class="family-card reveal">
-                    <h3>Gada Family</h3>
-                    <p><strong>Champaklal Gada</strong><br>(Grandfather)</p>
-                    <p style="margin-top: 10px;">Cordially invites you to bless his grandson's new beginning into married life.</p>
-                </div>
-                <div class="family-card reveal">
-                    <h3>Iyer Family</h3>
-                    <p><strong>The Bride's Family</strong><br>Welcomes you to join the grand celebrations and shower your graceful love.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="venue-section">
-            <h2 class="reveal">The Wedding Venue</h2>
-            <div class="venue-details reveal">
-                <p style="font-family: 'Great Vibes', cursive; font-size: 2rem; color: var(--burgundy);">Grand Ballroom, The Royal Resort</p>
-                <p>Gokuldham, Powder Galli, Goregaon East, Mumbai</p>
-            </div>
-            
-            <div class="map-container reveal">
-                <iframe src="https://maps.google.com/maps?q=Mumbai,%20Goregaon&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
-            </div>
-        </section>
     </div>
 
     <script>
-        // --- 1. Envelope Handling System ---
-        const envelope = document.getElementById('envelope');
-        const introOverlay = document.getElementById('intro-overlay');
-        const mainContent = document.getElementById('main-content');
-
-        envelope.addEventListener('click', () => {
-            // First step: Trigger the slow css animation of opening envelope
-            envelope.classList.add('open');
+        // --- 1. NEW: CURTAIN RAISER FUNCTION ---
+        function revealCurtains() {
+            const stage = document.getElementById('curtain-stage');
+            const text = document.getElementById('curtain-text');
             
-            // Second step: Fade out the overlay and expose the landing page safely
-            setTimeout(() => {
-                introOverlay.classList.add('fade-out');
-                mainContent.classList.add('visible');
-                initFloralRain();
-                initScratchCard();
-                triggerScrollAnimations(); // check initial positions
-            }, 2500); // Gives ample slow time for layout transition
-        });
-
-        // --- 2. Scroll Animation Trigger ---
-        function triggerScrollAnimations() {
-            const reveals = document.querySelectorAll('.reveal');
-            const windowHeight = window.innerHeight;
-
-            reveals.forEach(reveal => {
-                const elementTop = reveal.getBoundingClientRect().top;
-                const elementVisible = 120; // threshold
-
-                if (elementTop < windowHeight - elementVisible) {
-                    reveal.classList.add('active');
-                }
+            // Fade text out quickly
+            text.style.opacity = '0';
+            
+            // Part curtains sideways
+            stage.classList.add('opened');
+            
+            // Drop a mini floral intro flash right as curtains open
+            confetti({
+                particleCount: 40,
+                spread: 80,
+                origin: { y: 0.3 },
+                colors: ['#fb7185', '#fda4af', '#fef08a']
             });
+
+            // Wipe out stage from layout context completely after movement completes
+            setTimeout(() => {
+                stage.remove();
+            }, 1800);
         }
-        window.addEventListener('scroll', triggerScrollAnimations);
 
+        // --- 2. ENVELOPE OPENING & MAIN FLORAL RAIN LAUNCH ---
+        function openEnvelope() {
+            const envelope = document.getElementById('main-envelope');
+            const seal = document.getElementById('wax-seal');
+            const introScreen = document.getElementById('intro-screen');
+            const mainContent = document.getElementById('main-content');
 
-        // --- 3. Floral Rain Canvas Effect ---
-        function initFloralRain() {
-            const canvas = document.getElementById('floral-canvas');
-            const ctx = canvas.getContext('2d');
-            
-            function resize() {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
-            window.addEventListener('resize', resize);
-            resize();
+            seal.style.opacity = '0';
+            seal.style.transform = 'scale(0)';
+            envelope.classList.add('open');
 
-            const petalCount = 40;
-            const petals = [];
-
-            // Simple falling rose petal schema
-            for (let i = 0; i < petalCount; i++) {
-                petals.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height - canvas.height,
-                    r: Math.random() * 6 + 4,
-                    d: Math.random() * petalCount,
-                    speed: Math.random() * 1.5 + 1,
-                    swing: Math.random() * 2
-                });
-            }
-
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = 'rgba(255, 182, 193, 0.7)'; // Blush pink petal color
+            setTimeout(() => {
+                introScreen.classList.add('opacity-0');
+                mainContent.classList.remove('hidden');
                 
-                for (let i = 0; i < petalCount; i++) {
-                    const p = petals[i];
-                    ctx.beginPath();
-                    // Draw custom organic oval shape representing petals
-                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2, true);
-                    ctx.fill();
+                setTimeout(() => {
+                    mainContent.classList.add('opacity-100');
+                    introScreen.remove(); 
+                    triggerFloralRain();
+                }, 500);
 
-                    // Update positions gracefully
-                    p.y += p.speed;
-                    p.x += Math.sin(p.d) * 0.5;
-
-                    // Reset when off bottom edge
-                    if (p.y > canvas.height) {
-                        petals[i] = {
-                            x: Math.random() * canvas.width,
-                            y: -10,
-                            r: p.r,
-                            d: p.d,
-                            speed: p.speed,
-                            swing: p.swing
-                        };
-                    }
-                }
-                requestAnimationFrame(draw);
-            }
-            draw();
+            }, 2500);
         }
 
+        function triggerFloralRain() {
+            const duration = 15 * 1000;
+            const animationEnd = Date.now() + duration;
+            const colors = ['#f43f5e', '#fda4af', '#fecdd3', '#fef08a', '#fb7185'];
 
-        // --- 4. Scratch Card Heart Mechanic ---
+            (function frame() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return;
+
+                confetti({
+                    particleCount: 2,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0, y: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 2,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1, y: 0 },
+                    colors: colors
+                });
+
+                requestAnimationFrame(frame);
+            }());
+        }
+
+        // --- 3. INVERTED SCRATCH CARD MECHANICS ---
+        const canvas = document.getElementById('scratch-canvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
         function initScratchCard() {
-            const canvas = document.getElementById('scratch-canvas');
-            const ctx = canvas.getContext('2d');
-            let isDrawing = false;
-
-            // Generate beautifully crafted Matte Gold Heart Cover layer
-            ctx.fillStyle = '#C5A059';
+            ctx.fillStyle = '#cbd5e1'; 
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Overlay standard text to signpost interaction over the heart
-            ctx.fillStyle = '#fff';
-            ctx.font = 'bold 16px Arial';
+            ctx.fillStyle = '#475569';
+            ctx.font = 'bold 16px sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText('SCRATCH WITH MOUSE OR TOUCH', canvas.width / 2, canvas.height / 2);
-
-            // Set up masking dynamic configurations
-            ctx.globalCompositeOperation = 'destination-out';
-
-            function scratch(e) {
-                if (!isDrawing) return;
-                
-                // Track standard mouse vs responsive mobile coordinate systems safely
-                const rect = canvas.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                
-                const x = clientX - rect.left;
-                const y = clientY - rect.top;
-
-                ctx.beginPath();
-                ctx.arc(x, y, 25, 0, Math.PI * 2); // thickness of scratch
-                ctx.fill();
-            }
-
-            // Event bindings
-            canvas.addEventListener('mousedown', () => isDrawing = true);
-            canvas.addEventListener('touchstart', (e) => { isDrawing = true; e.preventDefault(); });
+            ctx.fillText('SCRATCH WITH LOVE', canvas.width / 2, canvas.height / 2 - 40);
+            ctx.fillText('♥ TO REVEAL DATE ♥', canvas.width / 2, canvas.height / 2 + 40);
             
-            window.addEventListener('mouseup', () => isDrawing = false);
-            window.addEventListener('touchend', () => isDrawing = false);
+            ctx.font = 'italic 12px sans-serif';
+            ctx.fillStyle = '#64748b';
+            ctx.fillText('Tap & wipe inside the card panel', canvas.width / 2, canvas.height / 2 + 100);
 
-            canvas.addEventListener('mousemove', scratch);
-            canvas.addEventListener('touchmove', (e) => { scratch(e); e.preventDefault(); });
+            ctx.globalCompositeOperation = 'destination-out';
         }
+
+        function drawHeartBrush(x, y, radius) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(x, y - radius * 0.4);
+            ctx.bezierCurveTo(x, y - radius, x - radius, y - radius, x - radius, y - radius * 0.2);
+            ctx.bezierCurveTo(x - radius, y + radius * 0.4, x - radius * 0.2, y + radius * 0.8, x, y + radius);
+            ctx.bezierCurveTo(x + radius * 0.2, y + radius * 0.8, x + radius, y + radius * 0.4, x + radius, y - radius * 0.2);
+            ctx.bezierCurveTo(x + radius, y - radius, x, y - radius, x, y - radius * 0.4);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        function scratch(e) {
+            if (!isDrawing) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            drawHeartBrush(x, y, 32);
+        }
+
+        canvas.addEventListener('mousedown', () => isDrawing = true);
+        canvas.addEventListener('mouseup', () => isDrawing = false);
+        canvas.addEventListener('mousemove', scratch);
+        
+        canvas.addEventListener('touchstart', () => isDrawing = true);
+        canvas.addEventListener('touchend', () => isDrawing = false);
+        canvas.addEventListener('touchmove', scratch);
+
+        initScratchCard();
+
+        // --- 4. SLOW SCROLL INTERSECTION OBSERVER ANIMATION ---
+        const observerOptions = {
+            root: null,
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target); 
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-section').forEach(section => {
+            observer.observe(section);
+        });
     </script>
 </body>
 </html>
