@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Grand Wedding Unveiling</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #fff0f3;
+            color: #4a4a4a;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- THEATRICAL CURTAIN INTRO --- */
+        .curtain-stage {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 1000;
+            pointer-events: none;
+            display: flex;
+        }
+        .curtain {
+            width: 50.5%; height: 100%;
+            background: linear-gradient(to right, #660000, #990011, #cc0022, #990011);
+            box-shadow: inset -15px 0 30px rgba(0,0,0,0.7), inset 15px 0 30px rgba(0,0,0,0.7);
+            transition: transform 2.2s cubic-bezier(0.66, 0, 0.12, 1);
+            pointer-events: auto;
+        }
+        .curtain-left { transform-origin: left center; border-right: 3px solid #d4af37; }
+        .curtain-right { transform-origin: right center; border-left: 3px solid #d4af37; }
+        .curtain-stage.open .curtain-left { transform: translateX(-100%) scaleX(0.2); }
+        .curtain-stage.open .curtain-right { transform: translateX(100%) scaleX(0.2); }
+
+        /* --- COLORFUL WEDDING SEASON BACKGROUND --- */
+        .vibrant-bg {
+            background-image: 
+                radial-gradient(circle at 5% 10%, rgba(255, 182, 193, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 95% 20%, rgba(255, 218, 131, 0.5) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(240, 255, 240, 0.5) 0%, transparent 70%),
+                radial-gradient(circle at 10% 80%, rgba(224, 187, 228, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 85% 90%, rgba(255, 223, 211, 0.6) 0%, transparent 45%);
+            background-color: #fff4f6;
+            background-attachment: fixed;
+        }
+
+        /* --- FLOATING VIBRANT BLOSSOMS --- */
+        .flower-petal {
+            position: fixed;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0.85;
+            animation: cascade Fall linear infinite;
+        }
+        @keyframes cascadeFall {
+            0% { transform: translateY(-12vh) rotate(0deg) scale(0.8); opacity: 0; }
+            10% { opacity: 0.9; }
+            90% { opacity: 0.9; }
+            100% { transform: translateY(105vh) rotate(600deg) scale(1.1) translateX(150px); opacity: 0; }
+        }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #c67a84;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* --- TRULY PERFECT 3D ENVELOPE ANIMATION --- */
+        .envelope-container {
+            position: relative;
+            width: 360px; height: 240px;
+            margin-top: 40px;
+            perspective: 1500px;
+        }
+        .envelope-wrapper {
+            position: absolute;
+            width: 100%; height: 100%;
+            background-color: #f7d6c8;
+            border-radius: 0 0 12px 12px;
+            box-shadow: 0 30px 60px rgba(186, 45, 74, 0.15);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.4s;
+        }
+        .envelope-wrapper:hover { transform: translateY(-5px); }
+        
+        /* Flaps constructed with precise overlapping gradients */
+        .env-back {
+            position: absolute; width: 100%; height: 100%;
+            background: #edd0c4; border-radius: 0 0 12px 12px;
+        }
+        .env-left {
+            position: absolute; bottom: 0; left: 0; width: 0; height: 0;
+            border-left: 180px solid #e0beaf; border-top: 120px solid transparent; border-bottom: 120px solid #e0beaf;
+            z-index: 3; border-radius: 0 0 0 12px;
+        }
+        .env-right {
+            position: absolute; bottom: 0; right: 0; width: 0; height: 0;
+            border-right: 180px solid #e0beaf; border-top: 120px solid transparent; border-bottom: 120px solid #e0beaf;
+            z-index: 3; border-radius: 0 0 12px 0;
+        }
+        .env-front-bottom {
+            position: absolute; bottom: 0; left: 0; width: 0; height: 0;
+            border-left: 180px solid transparent; border-right: 180px solid transparent; border-bottom: 130px solid #d4b0a0;
+            z-index: 3; border-radius: 0 0 12px 12px;
+        }
+        .env-top-flap {
+            position: absolute; top: 0; left: 0; width: 0; height: 0;
+            border-left: 180px solid transparent; border-right: 180px solid transparent; border-top: 135px solid #c99e8a;
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s 0.3s;
+            z-index: 4;
+        }
+        
+        /* Letter Card Styling */
+        .letter-card {
+            position: absolute;
+            top: 15px; left: 15px;
+            width: 330px; height: 210px;
+            background: #fffcf7;
+            border-radius: 8px;
+            z-index: 2;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border: 2px double #e0beaf;
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1) 0.4s, z-index 0s 0.4s;
+        }
+        .letter-card h2 { font-family: 'Great Vibes', cursive; font-size: 2.8rem; color: #b0415e; }
+        
+        .wax-seal {
+            position: absolute;
+            width: 55px; height: 55px;
+            background: radial-gradient(circle, #d62246 0%, #990011 100%);
+            border-radius: 50%;
+            top: 100px; left: 152.5px;
+            z-index: 5;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-family: 'Great Vibes', cursive; font-size: 1.8rem;
+            transition: transform 0.4s, opacity 0.3s;
+        }
+
+        /* Envelope Open Trigger State */
+        .envelope-container.is-open .env-top-flap { transform: rotateX(180deg); z-index: 1; }
+        .envelope-container.is-open .wax-seal { transform: scale(0) rotate(-45deg); opacity: 0; pointer-events: none; }
+        .envelope-container.is-open .letter-card { transform: translateY(-145px); z-index: 4; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+
+        /* --- RESPONSIVE HEART SCRATCH SYSTEM --- */
+        .scratch-wrapper {
+            position: relative;
+            width: 320px; height: 320px;
+            margin: 25px 0;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .heart-inner-box {
+            position: relative;
+            width: 280px; height: 280px;
+            z-index: 2;
+        }
+        .hidden-date-text {
+            position: absolute;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            background: #ffffff;
+            /* Perfectly clips the underlying background box content into a beautiful CSS heart template shape */
+            clip-path: path("M140,40 C140,40 190,-10 240,30 C290,70 240,150 140,240 C40,150 -10,70 40,30 C90,-10 140,40 140,40 Z");
+            box-shadow: inset 0 0 20px rgba(176, 65, 94, 0.1);
+        }
+        .hidden-date-text .numbers { font-size: 3.8rem; color: #cc0022; font-weight: 300; line-height: 1; }
+        .hidden-date-text .meta { font-size: 1rem; letter-spacing: 3px; text-transform: uppercase; color: #665555; margin-top: 8px; }
+        
+        #scratch-canvas {
+            position: absolute;
+            top: 0; left: 0;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        /* --- SCROLL ANIMATED SECTIONS --- */
+        .anim-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .anim-reveal.active { opacity: 1; transform: translateY(0); }
+
+        .section-title { font-family: 'Great Vibes', cursive; font-size: 5rem; color: #ba2d4a; }
+        .celebrity-names { font-family: 'Great Vibes', cursive; font-size: 3.6rem; color: #7f5539; margin: 10px 0 20px 0; }
+        .text-body { font-size: 1.15rem; line-height: 2; max-width: 560px; font-weight: 300; letter-spacing: 0.5px; }
+
+        /* --- VENUE ARCH ARCHITECTURE --- */
+        .royal-arch {
+            border: 2px solid #e6ccb2;
+            border-bottom: none;
+            border-radius: 170px 170px 0 0;
+            padding: 16px;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .royal-arch.active { opacity: 1; transform: scale(1); }
+        .arch-interior {
+            background: #ffffff;
+            border-radius: 150px 150px 0 0;
+            padding: 60px 40px 45px 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.05);
+            max-width: 360px;
+            border: 1px solid rgba(230, 204, 178, 0.5);
+        }
+        .arch-interior h3 { font-family: 'Great Vibes', cursive; font-size: 3.2rem; color: #ba2d4a; }
+        .vintage-line { width: 80px; height: 1px; background: linear-gradient(90deg, transparent, #c99e8a, transparent); margin: 20px auto; }
+        
+        .map-trigger {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 12px 40px;
+            background: #ba2d4a;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 500;
+            box-shadow: 0 6px 20px rgba(186, 45, 74, 0.25);
+            transition: all 0.3s;
+        }
+        .map-trigger:hover { background: #991133; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(186, 45, 74, 0.35); }
+    </style>
+</head>
+<body class="vibrant-bg">
+
+    <!-- OVERLAY CURTAINS -->
+    <div class="curtain-stage" id="theatreStage">
+        <div class="curtain curtain-left"></div>
+        <div class="curtain curtain-right"></div>
+    </div>
+
+    <!-- SECTION 1: THE ENVELOPE REVEAL -->
+    <section id="section-envelope">
+        <h4 style="letter-spacing: 5px; font-weight: 400; font-size: 0.85rem; color: #a65161; text-transform: uppercase;">A Magical Celebration Awaits</h4>
+        
+        <div class="envelope-container" id="envelopeActiveGroup">
+            <div class="envelope-wrapper">
+                <div class="env-back"></div>
+                <div class="letter-card">
+                    <h2>Save Our Date</h2>
+                    <div class="vintage-line" style="margin: 10px auto;"></div>
+                    <p style="font-size: 0.75rem; letter-spacing: 2px; color: #8f6d5e; font-weight: 600;">SCROLL DOWN</p>
+                </div>
+                <div class="env-left"></div>
+                <div class="env-right"></div>
+                <div class="env-front-bottom"></div>
+                <div class="env-top-flap"></div>
+                <div class="wax-seal">O&B</div>
+            </div>
+        </div>
+        
+        <p style="margin-top: 45px; color: #ba2d4a; font-size: 0.85rem; letter-spacing: 1px; font-weight: 500; animation: pulse 2s infinite;">Tap Envelope to Open</p>
+        <div class="scroll-down" onclick="jumpTo('section-scratch')">Reveal Date ➔</div>
+    </section>
+
+    <!-- SECTION 2: RESPONSIVE HEART SCRATCH ZONE -->
+    <section id="section-scratch">
+        <h3 style="font-weight: 300; letter-spacing: 3px; color: #7f5539;">THE HEART REVEAL</h3>
+        <p style="font-size: 0.85rem; color: #a65161; margin-top: 5px; margin-bottom: 20px; letter-spacing: 1px;">Swipe across the golden heart to unveil our wedding day</p>
+        
+        <div class="scratch-wrapper">
+            <div class="heart-inner-box">
+                <div class="hidden-date-text">
+                    <div class="numbers">24</div>
+                    <div class="meta">October 2026</div>
+                </div>
+                <canvas id="scratch-canvas" width="280" height="280"></canvas>
+            </div>
+        </div>
+
+        <div class="scroll-down" onclick="jumpTo('section-invite')">Our Invitation ➔</div>
+    </section>
+
+    <!-- SECTION 3: CORE DIALOGUE INVITATION -->
+    <section id="section-invite">
+        <h2 class="section-title anim-reveal">You are Invited</h2>
+        <div class="celebrity-names anim-reveal">Olivia & Benjamin</div>
+        <p class="text-body anim-reveal">
+            Because you have occupied a special space in our lives and hearts, we joyously invite you to witness the beautiful step we take forward into love, friendship, and eternity.
+        </p>
+        <div class="scroll-down" onclick="jumpTo('section-venue')">The Details ➔</div>
+    </section>
+
+    <!-- SECTION 4: THE ARCHED VENUE HOUSING -->
+    <section id="section-venue">
+        <div class="royal-arch" id="royalVenueArch">
+            <div class="arch-interior">
+                <h3>The Venue</h3>
+                <div class="vintage-line"></div>
+                <p style="font-weight: 600; letter-spacing: 2px; font-size: 0.9rem; color: #ba2d4a; margin-bottom: 8px;">THE ROSEWOOD PAVILIONS</p>
+                <p style="font-size: 0.9rem; font-weight: 300; line-height: 1.8; color: #555555;">
+                    8942 Orchid Avenue,<br>
+                    Napa Valley, California
+                </p>
+                <div class="vintage-line"></div>
+                <p style="font-size: 0.8rem; letter-spacing: 1px; color: #7f5539; font-weight: 500;">
+                    CEREMONY COMMENCES AT 4:00 PM<br>
+                    DINNER & RECEPTION TO FOLLOW
+                </p>
+                <a href="https://maps.google.com" target="_blank" class="map-trigger">Google Maps</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // --- 1. Dramatic Stage Curtain Trigger ---
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('theatreStage').classList.add('open');
+            }, 500);
+        });
+
+        // --- 2. Beautiful Colorful Wedding Flower Petal Rain System ---
+        function createFlowerStorm() {
+            const container = document.body;
+            // Mix of warm, vibrant wedding-themed color variants
+            const petalColors = [
+                'linear-gradient(135deg, #ffccd5 0%, #ffb3c1 100%)', // Rose Pink
+                'linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 100%)', // Soft Peach
+                'linear-gradient(135deg, #fff0f3 0%, #ffccd5 100%)', // Pastel Blush
+                'linear-gradient(135deg, #e8dbfc 0%, #f3adff 100%)', // Light Orchid Purple
+                'linear-gradient(135deg, #fff3b0 0%, #cae9ff 100%)'  // Warm Amber Cream
+            ];
+
+            for (let i = 0; i < 40; i++) {
+                let petal = document.createElement('div');
+                petal.classList.add('flower-petal');
+                petal.style.background = petalColors[Math.floor(Math.random() * petalColors.length)];
+                petal.style.left = Math.random() * 100 + 'vw';
+                
+                // Varied randomized sizing shapes
+                let size = Math.random() * 14 + 10;
+                petal.style.width = size + 'px';
+                petal.style.height = (size * (Math.random() * 0.4 + 1.1)) + 'px';
+                petal.style.borderRadius = '100% 0 100% 50%'; // Smooth petal contours
+                
+                petal.style.animationName = 'cascadeFall';
+                petal.style.animationDuration = Math.random() * 6 + 6 + 's';
+                petal.style.animationDelay = Math.random() * 8 + 's';
+                container.appendChild(petal);
+            }
+        }
+        window.addEventListener('DOMContentLoaded', createFlowerStorm);
+
+        // --- 3. Interactive Envelope Module ---
+        const envelopeActiveGroup = document.getElementById('envelopeActiveGroup');
+        envelopeActiveGroup.addEventListener('click', () => {
+            envelopeActiveGroup.classList.toggle('is-open');
+        });
+
+        function jumpTo(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- 4. Responsive Heart-Shaped Canvas Scratch System ---
+        const canvas = document.getElementById('scratch-canvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        // Render the golden scratch canvas surface area explicitly as a vector Heart path geometry
+        function setupHeartScratchSurface() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Build the solid bounding heart container path
+            ctx.fillStyle = '#dfba9d'; // Premium matte gold champagne fill
+            ctx.beginPath();
+            // Vector path math mapping directly inside 280x280 canvas space
+            ctx.moveTo(140, 40);
+            ctx.bezierCurveTo(140, 40, 190, -10, 240, 30);
+            ctx.bezierCurveTo(290, 70, 240, 150, 140, 240);
+            ctx.bezierCurveTo(40, 150, -10, 70, 40, 30);
+            ctx.bezierCurveTo(90, -10, 140, 40, 140, 40);
+            ctx.closePath();
+            ctx.fill();
+
+            // Overlay elegant white text path mapping across the gold heart texture
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '600 11px Montserrat';
+            ctx.textAlign = 'center';
+            ctx.letterSpacing = '2px';
+            ctx.fillText('SCRATCH WITH LOVE', 140, 115);
+        }
+
+        setupHeartScratchSurface();
+
+        function manageScratchMove(e) {
+            if (!isDrawing) return;
+            const boundaries = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            
+            const x = clientX - boundaries.left;
+            const y = clientY - boundaries.top;
+
+            // Use destination-out to carve clear transparent masks inside target elements
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 22, 0, Math.PI * 2); // 22px drawing brush tip size
+            ctx.fill();
+        }
+
+        canvas.addEventListener('mousedown', () => isDrawing = true);
+        canvas.addEventListener('mousemove', manageScratchMove);
+        window.addEventListener('mouseup', () => isDrawing = false);
+
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; manageScratchMove(e); });
+        canvas.addEventListener('touchmove', (e) => { manageScratchMove(e); e.preventDefault(); }, { passive: false });
+        window.addEventListener('touchend', () => isDrawing = false);
+
+        // --- 5. Clean Scroll Detection Reveal Animations ---
+        const configuration = { root: null, threshold: 0.2 };
+        const viewObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, configuration);
+
+        document.querySelectorAll('.anim-reveal').forEach(el => viewObserver.observe(el));
+        viewObserver.observe(document.getElementById('royalVenueArch'));
+    </script>
+</body>
+</html>
